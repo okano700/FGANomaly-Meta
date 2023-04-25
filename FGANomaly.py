@@ -231,9 +231,7 @@ class FGANomalyModel(object):
             else:
                 pass
 
-            print('[Epoch %d/%d] current training loss is %.5f, val loss is %.5f, adv loss is %.5f, '
-                  'time per epoch is %.5f' % (i+1, self.epoch, self.re_loss, self.val_loss,
-                                              self.adv_dis_loss, self.time_per_epoch))
+            print(f'[Epoch {i+1}/{self.epoch}] current training loss is {self.re_loss}, val loss is {self.val_loss}, adv loss is {self.adv_dis_loss}, time per epoch is {self.time_per_epoch}')
 
     def train_epoch(self):
         start_time = time()
@@ -332,15 +330,16 @@ class FGANomalyModel(object):
 
         values = test_x[:len(re_values)]
         labels = test_y[:len(re_values)]
-        metrics_calculate(values, re_values, labels)
+        metrics = metrics_calculate(values, re_values, labels)
         self.save_result(values, re_values, labels)
-
+        return metrics
+    
     def value_reconstruction_val(self, values, window_size, val=True):
         piece_num = len(values) // window_size
         reconstructed_values = []
         for i in range(piece_num):
             raw_values = values[i * window_size:(i + 1) * window_size, :]
-            raw_values = t.tensor([raw_values], dtype=t.float).to(self.device)
+            raw_values = t.tensor(np.array([raw_values]), dtype=t.float).to(self.device)
             if val:
                 reconstructed_value_, z = self.ae(raw_values)
             else:

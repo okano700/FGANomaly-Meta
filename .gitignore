@@ -1,0 +1,6 @@
+rnn_output
+best_models
+*.ipynb
+.ipynb_checkpoints
+results
+__pycache__

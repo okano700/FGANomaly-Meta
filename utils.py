@@ -6,7 +6,7 @@ import os
 from torch.utils.data import DataLoader, TensorDataset
 import torch as t
 from tqdm import tqdm
-from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score
+from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score, accuracy_score
 import random
 import torch.nn as nn
 
@@ -100,9 +100,20 @@ def metrics_calculate(values, re_values, labels):
     pre_ = precision_score(y_true=labels, y_pred=preds_)
     re_ = recall_score(y_true=labels, y_pred=preds_)
     auc = roc_auc_score(y_true=labels, y_score=normalize(scores))
+    
 
     print('F1 score is [%.5f / %.5f] (before adj / after adj), auc score is %.5f.' % (f1, f1_, auc))
     print('Precision score is [%.5f / %.5f], recall score is [%.5f / %.5f].' % (pre, pre_, re, re_))
+
+    score = {}
+    score['f1'] = f1
+    score['auc'] = auc
+    score['precision'] = pre
+    score['recall'] = re
+    score['accuracy'] = accuracy_score(y_true=labels, y_pred=preds)
+    
+    return score
+
 
 
 def evaluate(labels, scores, step=2000, adj=True):
@@ -178,7 +189,7 @@ def remove_all_same(train_x, test_x):
     return train_x[:, remain_idx], test_x[:, remain_idx]
 
 
-def load_data(data_prefix, val_size, window_size=120, stride=1, batch_size=64, dataloder=False):
+def load_data_(data_prefix, val_size, window_size=120, stride=1, batch_size=64, dataloder=False):
     # root path
     root_path = os.path.join('dataset', data_prefix + '_raw_data')
 
@@ -227,3 +238,41 @@ def load_data(data_prefix, val_size, window_size=120, stride=1, batch_size=64, d
             "test": (test_x, test_y),
             "nc": nc
         }
+
+
+
+def load_data(train_x, test_x, test_y, val_size:float = 0.2, window_size:int = 100, stride:int = 1, batch_size: int= 64, dataloader:bool = False):
+
+    nc = 1
+    
+    train_len = int(len(train_x) * (1-val_size))
+    print(val_size)
+    val_x = train_x[train_len:]
+    train_x = train_x[:train_len]
+
+
+    print('Training data:', train_x.shape)
+    print('Validation data:', val_x.shape)
+    print('Testing data:', test_x.shape)
+    
+    if dataloader:
+        train_x  = get_from_one(train_x, window_size, stride)
+        print(train_len)
+        train_y = np.zeros(len(train_x))
+
+        train_dataset = TensorDataset(t.Tensor(train_x), t.Tensor(train_y))
+
+        data_loader = {
+            "train": DataLoader(
+                dataset = train_dataset,
+                batch_size = batch_size,
+                shuffle = False,
+                num_workers= 0,
+                drop_last=False
+                ),
+            "val" : val_x,
+            "test":(test_x, test_y),
+            "nc": nc
+            }
+
+        return data_loader

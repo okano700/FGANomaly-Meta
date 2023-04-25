@@ -1,0 +1,23 @@
+{
+  "val_size": 0.2,
+  "batch_size": 32,
+  "stride": 1,
+  "window_size": 600,
+  "z_dim": 10,
+  "hidden_dim": 50,
+  "rnn_hidden_dim": 50,
+  "num_layers": 1,
+  "bidirectional": true,
+  "cell": "lstm",
+  "lr": 0.0003,
+  "if_scheduler": true,
+  "scheduler_step_size": 5,
+  "scheduler_gamma": 0.5,
+  "epoch": 10,
+  "early_stop": true,
+  "early_stop_tol": 10,
+  "weighted_loss": true,
+  "strategy": "quadratic",
+  "dis_ar_iter": 1,
+  "adv_rate": 0.005
+}
