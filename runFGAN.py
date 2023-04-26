@@ -75,18 +75,13 @@ if __name__ =="__main__":
     res['n'] = args.n
     res['id'] = args.i
     
-    if not os.path.exists('res.csv'):
-        pd.DataFrame([res]).to_csv('res.csv', index = False)
-    else:
+    if os.path.exists('res.csv'):
+        print('existe')
         df = pd.read_csv('res.csv')
         df = pd.concat([df, pd.DataFrame([res])])
+
+    else:
+
+        pd.DataFrame([res]).to_csv('res.csv', index = False)
     print(res)
-
-
-
-
-
-
-
-
 
