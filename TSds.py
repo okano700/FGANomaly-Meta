@@ -42,26 +42,27 @@ class TSds():
 
 
     @classmethod
-    def read_YAHOO(cls,path:str):
+    def read_YAHOO(cls,path:str, train_split:float):
         
         split_name = str(path).split('/')
         ds_name = '/'.join(split_name[-2:])
         df = pd.read_csv(path)
         df.set_index('timestamp', inplace = True)
         ts = np.array(df['value'])
+        training = int(len(ts)*train_split)
 
-        return cls(df = df, name = ds_name, ts = ts, source ="YAHOO")
+        return cls(df = df, name = ds_name, ts = ts, source ="YAHOO",training = training)
 
     @classmethod
-    def read_NAB(cls, path:str):
+    def read_NAB(cls, path:str, train_split:float):
         
         split_name = str(path).split('/')
         ds_name = '/'.join(split_name[-2:])
         df = pd.read_csv(path, parse_dates=[0], index_col= 0)
         ts = np.array(df.value)
-        df['is_anomaly'] = cls._get_NAB_anomaly(df, ds_name)
-
-        return cls(df = df, name = ds_name, ts = ts, source ="NAB")
+        training = int(len(ts)*train_split)
+        df['is_anomaly'] = cls._get_NAB_anomaly(df, ds_name, path = '/home/eyokano/datsets/NAB/combined_windows.json')
+        return cls(df = df, name = ds_name, ts = ts, source ="NAB", training = training)
 
     @staticmethod
     def _get_NAB_anomaly(df:pd.DataFrame, ds_name:str = None, path:str = None):
