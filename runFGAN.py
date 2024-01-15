@@ -51,6 +51,7 @@ if __name__ =="__main__":
                  test_x = ds.ts_scaled[ds.train_split:],
                  test_y = np.array(ds.df['is_anomaly'][ds.train_split:]),
                  val_size=0.2,
+                 window_size = params['window_size']
                  dataloader=True)
     data['nc'] = 1
 

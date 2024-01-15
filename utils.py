@@ -244,9 +244,9 @@ def load_data_(data_prefix, val_size, window_size=120, stride=1, batch_size=64, 
 def load_data(train_x, test_x, test_y, val_size:float = 0.2, window_size:int = 100, stride:int = 1, batch_size: int= 64, dataloader:bool = False):
 
     nc = 1
+    v = max(window_size, int(len(train_x) * (val_size)))
     
-    train_len = int(len(train_x) * (1-val_size))
-    print(val_size)
+    train_len = len(train_x) - v
     val_x = train_x[train_len:]
     train_x = train_x[:train_len]
 
