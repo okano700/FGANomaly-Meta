@@ -106,11 +106,11 @@ def metrics_calculate(values, re_values, labels):
     print('Precision score is [%.5f / %.5f], recall score is [%.5f / %.5f].' % (pre, pre_, re, re_))
 
     score = {}
-    score['f1'] = f1
+    score['f1'] = f1_
     score['auc'] = auc
-    score['precision'] = pre
-    score['recall'] = re
-    score['accuracy'] = accuracy_score(y_true=labels, y_pred=preds)
+    score['precision'] = pre_
+    score['recall'] = re_
+    score['accuracy'] = accuracy_score(y_true=labels, y_pred=preds_)
     
     return score
 
