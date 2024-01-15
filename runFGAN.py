@@ -21,7 +21,6 @@ if __name__ =="__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--path', type = str, required=True)
-    parser.add_argument('--ds',type=str, required=True)
     parser.add_argument('--WL',type=int, required=True)
     parser.add_argument('--n',type=int, required=True)
     parser.add_argument('--i', type=int, required = True)
@@ -74,14 +73,16 @@ if __name__ =="__main__":
     res['WL'] = args.WL 
     res['n'] = args.n
     res['id'] = args.i
+
+    fileName = "res_FGAN_UCR_falta.csv"
     
-    if os.path.exists('res.csv'):
+    if os.path.exists(fileName):
         print('existe')
-        df = pd.read_csv('res.csv')
-        df = pd.concat([df, pd.DataFrame([res])])
+        df = pd.read_csv(fileName)
+        df = pd.concat([df, pd.DataFrame([res])]).to_csv(fileName, index = False)
 
     else:
 
-        pd.DataFrame([res]).to_csv('res.csv', index = False)
+        pd.DataFrame([res]).to_csv(fileName, index = False)
     print(res)
 

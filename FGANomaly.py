@@ -15,7 +15,7 @@ from sklearn.metrics import mean_squared_error
 from utils import seed_all, metrics_calculate, AdaWeightedLoss
 
 
-seed_all(2021)
+#seed_all(2021)
 
 
 class RNNEncoder(nn.Module):
